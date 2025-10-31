@@ -1,0 +1,1 @@
+// This file is in the root of our folder in which i am defining the types for our sign-up and sign-in form in the (auth).

@@ -5,14 +5,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="auth-layout">
       <section className="auth-left-section scrollbar-hide-default">
-        <Link href="/" className="auth-logo">
+        <Link href="/" className="auth-logo flex items-center gap-2">
           <Image
             src="/favicon.ico"
             alt="Altrion logo"
             width={140}
             height={32}
-            className="h-9 w-auto"
+            className="h-8 w-auto"
           />
+          <span className="text-xl font-semibold text-orange-500">Altrion</span>
         </Link>
         <div className="pb-6 lg:pb-8 flex-1">{children}</div>
       </section>
@@ -25,7 +26,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </blockquote>
           <div className="flex flex-col justify-between">
             <cite className="auth-testimonial-author">- Omar N.</cite>
-            <p className="max-md:text-xs text-gray-500">Part-time Trader</p>
+            <p className="max-md:text-xs text--500">Part-time Trader</p>
 
             <div className="flex items-center gap-0.5">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -40,6 +41,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               ))}
             </div>
           </div>
+        </div>
+        <div className="flex-1 relative">
+            <Image src="/assets/images/Dashboard.jpeg" alt="Dasboard Page Image" width={1440} height={1150} className="auth-dashboard-preview absolute top-0"/>
+
         </div>
       </section>
     </main>
