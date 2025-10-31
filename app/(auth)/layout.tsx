@@ -1,0 +1,48 @@
+import Image from "next/image";
+import Link from "next/link";
+
+const Layout = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <main className="auth-layout">
+      <section className="auth-left-section scrollbar-hide-default">
+        <Link href="/" className="auth-logo">
+          <Image
+            src="/favicon.ico"
+            alt="Altrion logo"
+            width={140}
+            height={32}
+            className="h-9 w-auto"
+          />
+        </Link>
+        <div className="pb-6 lg:pb-8 flex-1">{children}</div>
+      </section>
+      <section className="auth-right-section">
+        <div className="z-10 relative lg:mt-4 lg:mb-16">
+          <blockquote className="auth-blog-quote">
+            The personalized alert system is a game-changer. Altrion’s
+            notifications are precise and actionable, so I never miss a setup.
+            Plus the charting tools are smooth and lightweight.
+          </blockquote>
+          <div className="flex flex-col justify-between">
+            <cite className="auth-testimonial-author">- Omar N.</cite>
+            <p className="max-md:text-xs text-gray-500">Part-time Trader</p>
+
+            <div className="flex items-center gap-0.5">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Image
+                  src="/star.png"
+                  alt="Star icons"
+                  width={20}
+                  height={20}
+                  key={star}
+                  className="w-5 h-5"
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+};
+export default Layout;
