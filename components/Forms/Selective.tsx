@@ -1,11 +1,54 @@
-import React from 'react'
+import React from "react";
+import { Label } from "../ui/label";
+import { Controller } from "react-hook-form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-const Selective = ({name,label,placeholder,options,control,error,required=false}:SelectFieldProps) => {
+const Selective = ({
+  name,
+  label,
+  placeholder,
+  options,
+  control,
+  error,
+  required = false,
+}: SelectFieldProps) => {
   return (
-    <div className='space-y-2'>
-        <label htmlFor={name} className='form-label'>{label}</label>
+    <div className="space-y-2">
+      <Label htmlFor={name} className="form-label">
+        {label}
+      </Label>
+      <Controller
+        name={name}
+        control={control}
+        rules={{
+          required: required ? `Please select ${label.toLowerCase()}` : false,
+        }}
+        render={({ field }) => (
+          <Select value={field.value} onValueChange={field.onChange}>
+            <SelectTrigger className="select-trigger">
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-700 border-gray-400 text-amber-200">
+              {options.map((option) => (
+                <SelectItem
+                  value={option.value}
+                  key={option.value}
+                  className="focus:bg-slate-800 focus:text-red-300"
+                >{option.label}</SelectItem>
+              ))}
+            </SelectContent>
+            {error && <p className="text-sm text-red-500">{error.message}</p>}
+          </Select>
+        )}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default Selective
+export default Selective;

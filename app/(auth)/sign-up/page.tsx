@@ -1,7 +1,9 @@
 "use client";
+import CountryField, { CountrySelectField } from "@/components/Forms/CountryField";
 import InputField from "@/components/Forms/InputField";
 import Selective from "@/components/Forms/Selective";
 import { Button } from "@/components/ui/button";
+import { INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS } from "@/lib/constant";
 import { useForm } from "react-hook-form";
 
 const SignUpPage = () => {
@@ -80,14 +82,39 @@ const SignUpPage = () => {
           }}
         />
         {/* Country selective. */}
-        <Selective 
+        <CountryField
+          name="country"
+          label="Country"
+          control={control}
+          error={errors.country}
+        />
+        {/* Investment Goals, Preferred Industry, Risk Tolerance - Selective components */}
+         <Selective 
         name="Investment Goals"
         label="Investment Goals"
-        palceholder = "Select your investment goals."
+        placeholder = "Select your investment goals."
+        options={INVESTMENT_GOALS}
         control={control}
         error={errors.investmentGoals}
         required
-        
+        />
+        <Selective 
+        name="preferredIndustry"
+        label="Preferred Industry"
+        placeholder = "Select your preferred industry."
+        options={PREFERRED_INDUSTRIES}
+        control={control}
+        error={errors.preferredIndustry}
+        required
+        />
+         <Selective 
+        name="riskTolerance"
+        label="Risk Tolerance"
+        placeholder = "Select your risk level."
+        options={RISK_TOLERANCE_OPTIONS}
+        control={control}
+        error={errors.riskTolerance}
+        required
         />
         <Button
           type="submit"
