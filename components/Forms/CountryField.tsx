@@ -1,0 +1,168 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import { useState } from "react";
+import { Control, Controller, FieldError } from "react-hook-form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Label } from "@/components/ui/label";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const countryList = () => {
+  // A compact list of common ISO 3166-1 alpha-2 country codes used as a fallback
+  const codes = [
+    "US","GB","CA","FR","DE","ES","IT","JP","CN","IN",
+    "AU","BR","RU","ZA","NL","SE","NO","DK","FI","BE",
+    "CH","AT","IE","NZ","MX","AR","CL","CO","PE","VE",
+    "PL","CZ","HU","GR","PT","TR","KR","SG","MY","TH",
+    "PH","VN","ID","AE","SA","IL","EG","NG","KE"
+  ];
+
+  // Use Intl.DisplayNames to get localized country names (fallback to code if unavailable)
+  const displayNames = new Intl.DisplayNames(["en"], { type: "region" });
+
+  const data = codes.map((code) => ({
+    value: code,
+    label: displayNames.of(code) || code,
+  }));
+
+  return {
+    // match the small API used in this file: countryList().getData()
+    getData: () => data,
+  };
+};
+
+type CountrySelectProps = {
+  name: string;
+  label: string;
+  control: Control<any>;
+  error?: FieldError;
+  required?: boolean;
+};
+
+const CountrySelect = ({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) => {
+  const [open, setOpen] = useState(false);
+
+  // Get country options with flags
+  const countries = countryList().getData();
+
+  // Helper function to get flag emoji
+  const getFlagEmoji = (countryCode: string) => {
+    const codePoints = countryCode
+      .toUpperCase()
+      .split("")
+      .map((char) => 127397 + char.charCodeAt(0));
+    return String.fromCodePoint(...codePoints);
+  };
+
+  return (
+  <Popover open={open} onOpenChange={setOpen}>
+    <PopoverTrigger asChild>
+      <button
+        type="button"
+        role="combobox"
+        aria-expanded={open}
+        className="country-select-trigger inline-flex items-center justify-between rounded-md border px-3 py-2 bg-transparent hover:bg-gray-700"
+      >
+        {value ? (
+          <span className="flex items-center gap-2">
+            <span>{getFlagEmoji(value)}</span>
+            <span>{countries.find((c) => c.value === value)?.label}</span>
+          </span>
+        ) : (
+          "Select your country..."
+        )}
+        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      </button>
+    </PopoverTrigger>
+    <PopoverContent
+        align="start"
+      >
+        <Command className="bg-gray-800 border-gray-600">
+          <CommandInput
+            placeholder="Search countries..."
+            className="country-select-input"
+          />
+          <CommandEmpty className="country-select-empty">
+            No country found.
+          </CommandEmpty>
+          <CommandList className="max-h-60 bg-gray-800 scrollbar-hide-default">
+            <CommandGroup className="bg-gray-800">
+              {countries.map((country) => (
+                <CommandItem
+                  key={country.value}
+                  value={`${country.label} ${country.value}`}
+                  onSelect={() => {
+                    onChange(country.value);
+                    setOpen(false);
+                  }}
+                  className="country-select-item"
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4 text-yellow-500",
+                      value === country.value ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  <span className="flex items-center gap-2">
+                    <span>{getFlagEmoji(country.value)}</span>
+                    <span>{country.label}</span>
+                  </span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
+export const CountrySelectField = ({
+  name,
+  label,
+  control,
+  error,
+  required = false,
+}: CountrySelectProps) => {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={name} className="form-label">
+        {label}
+      </Label>
+      <Controller
+        name={name}
+        control={control}
+        rules={{
+          required: required ? `Please select ${label.toLowerCase()}` : false,
+        }}
+        render={({ field }) => (
+          <CountrySelect value={field.value} onChange={field.onChange} />
+        )}
+      />
+      {error && <p className="text-sm text-red-500">{error.message}</p>}
+      <p className="text-xs text-gray-500">
+        Helps us show market data and news relevant to you.
+      </p>
+    </div>
+  );
+};
+export default CountrySelectField;
