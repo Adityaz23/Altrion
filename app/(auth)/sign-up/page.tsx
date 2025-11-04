@@ -1,5 +1,6 @@
 "use client";
-import CountryField, { CountrySelectField } from "@/components/Forms/CountryField";
+import { CountrySelectField } from "@/components/Forms/CountryField";
+import FooterLink from "@/components/Forms/FooterLink";
 import InputField from "@/components/Forms/InputField";
 import Selective from "@/components/Forms/Selective";
 import { Button } from "@/components/ui/button";
@@ -82,7 +83,7 @@ const SignUpPage = () => {
           }}
         />
         {/* Country selective. */}
-        <CountryField
+        <CountrySelectField
           name="country"
           label="Country"
           control={control}
@@ -125,6 +126,7 @@ const SignUpPage = () => {
             ? "Creating your account"
             : "Start Your Trading Journey"}
         </Button>
+        <FooterLink text="Already have an account" linkText="Sign In" href="/sign-in"/>
       </form>
     </>
   );
