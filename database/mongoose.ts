@@ -31,5 +31,7 @@ export const connectDatabase = async () => {
         cached.promise = null;
         throw error;
     }
+   
     console.log(`Connected to the Database,${process.env.NODE_ENV} - ${MONGO_DB}`)
+     return cached.conn;
 }
