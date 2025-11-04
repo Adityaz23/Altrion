@@ -43,7 +43,7 @@ const UserDropDown = () => {
 
       <DropdownMenuContent className="text-gray-400 ">
         <DropdownMenuLabel>
-          <div className="flex relative items-center gap-3 py-2">
+          <div className="flex relative items-center gap-3 py-2 ">
             <Avatar className="h-8 w-8">
               {/* This is my github pfp using it for the dummy user data. */}
               <AvatarImage src="https://avatars.githubusercontent.com/u/95933054?s=96&v=4" />
