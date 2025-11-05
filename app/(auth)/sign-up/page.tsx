@@ -5,13 +5,17 @@ import InputField from "@/components/Forms/InputField";
 import Selective from "@/components/Forms/Selective";
 import { Button } from "@/components/ui/button";
 import { signUpEmail } from "@/lib/action/auth.actions";
-import { INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS } from "@/lib/constant";
+import {
+  INVESTMENT_GOALS,
+  PREFERRED_INDUSTRIES,
+  RISK_TOLERANCE_OPTIONS,
+} from "@/lib/constant";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const SignUpPage = () => {
-  const router = useRouter()
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -30,16 +34,25 @@ const SignUpPage = () => {
     mode: "onBlur",
   });
   const onSubmit = async (data: SignUpFormData) => {
-    // Here we are rendering the template to the new user which will be send to the email of the user.
     try {
-      //Here we will call the signUpWithEmail server action.
-      const result = signUpEmail(data);
-      if((await result).success) router.push('/')
+      // Await the async call
+      const result = await signUpEmail(data);
+      console.log(result);
+
+      if (result.success) {
+        toast.success("Account created successfully!");
+        router.push("/");
+      } else {
+        toast.error("Signup failed", {
+          description: result.error || "Unable to create account.",
+        });
+      }
     } catch (error) {
-      console.log(error);
-      toast.error("Error creating account",{
-        description:error instanceof Error ? error.message : "Failed to create account"
-      })
+      console.error(error);
+      toast.error("Error creating account", {
+        description:
+          error instanceof Error ? error.message : "Failed to create account",
+      });
     }
   };
 
@@ -57,7 +70,7 @@ const SignUpPage = () => {
           validation={{ required: "Full name is required", minLength: 2 }}
         />
         <InputField
-          name="Email"
+          name="email"
           label="Email ID"
           placeholder="aditya@gmail.com"
           type="email"
@@ -72,7 +85,7 @@ const SignUpPage = () => {
           }}
         />
         <InputField
-          name="Password"
+          name="password"
           label="Your Password"
           placeholder="Your strong password"
           type="password"
@@ -81,15 +94,15 @@ const SignUpPage = () => {
           validation={{
             required: "Strong Password is required",
             minLength: {
-              value:8,
-              message:"Pasword must be atleast 8 characters long",
+              value: 8,
+              message: "Pasword must be atleast 8 characters long",
               pattern: {
                 value:
-                /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
+                  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/,
                 message:
-                "Password must be at least 8 characters, include 1 uppercase, 1 lowercase, 1 number, and 1 special character",
+                  "Password must be at least 8 characters, include 1 uppercase, 1 lowercase, 1 number, and 1 special character",
               },
-            }
+            },
           }}
         />
         {/* Country selective. */}
@@ -100,32 +113,32 @@ const SignUpPage = () => {
           error={errors.country}
         />
         {/* Investment Goals, Preferred Industry, Risk Tolerance - Selective components */}
-         <Selective 
-        name="Investment Goals"
-        label="Investment Goals"
-        placeholder = "Select your investment goals."
-        options={INVESTMENT_GOALS}
-        control={control}
-        error={errors.investmentGoals}
-        required
+        <Selective
+          name="investmentGoals"
+          label="Investment Goals"
+          placeholder="Select your investment goals."
+          options={INVESTMENT_GOALS}
+          control={control}
+          error={errors.investmentGoals}
+          required
         />
-        <Selective 
-        name="preferredIndustry"
-        label="Preferred Industry"
-        placeholder = "Select your preferred industry."
-        options={PREFERRED_INDUSTRIES}
-        control={control}
-        error={errors.preferredIndustry}
-        required
+        <Selective
+          name="preferredIndustry"
+          label="Preferred Industry"
+          placeholder="Select your preferred industry."
+          options={PREFERRED_INDUSTRIES}
+          control={control}
+          error={errors.preferredIndustry}
+          required
         />
-         <Selective 
-        name="riskTolerance"
-        label="Risk Tolerance"
-        placeholder = "Select your risk level."
-        options={RISK_TOLERANCE_OPTIONS}
-        control={control}
-        error={errors.riskTolerance}
-        required
+        <Selective
+          name="riskTolerance"
+          label="Risk Tolerance"
+          placeholder="Select your risk level."
+          options={RISK_TOLERANCE_OPTIONS}
+          control={control}
+          error={errors.riskTolerance}
+          required
         />
         <Button
           type="submit"
@@ -136,7 +149,11 @@ const SignUpPage = () => {
             ? "Creating your account"
             : "Start Your Trading Journey"}
         </Button>
-        <FooterLink text="Already have an account" linkText="Sign In" href="/sign-in"/>
+        <FooterLink
+          text="Already have an account"
+          linkText="Sign In"
+          href="/sign-in"
+        />
       </form>
     </>
   );

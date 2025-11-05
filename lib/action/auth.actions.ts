@@ -1,6 +1,4 @@
 "use server";
-
-import { email, success } from "better-auth";
 import { auth } from "../btr-auth/auth";
 import { inngest } from "../inngest/client";
 
@@ -33,7 +31,9 @@ export const signUpEmail = async ({
     }
     return {success: true, data:response};
   } catch (error) {
-    console.log("Signup failed", error);
-    return { success: false, error: "Signup failed" };
+    console.error("Signup failed", error);
+    const message =
+      error instanceof Error ? error.message : typeof error === "string" ? error : JSON.stringify(error);
+    return { success: false, error: message };
   }
 };

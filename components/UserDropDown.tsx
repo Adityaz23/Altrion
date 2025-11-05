@@ -12,12 +12,11 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { LogOut } from "lucide-react";
 import NavItems from "./NavItems";
-const UserDropDown = () => {
+const UserDropDown = ({ user }: { user: User }) => {
   const router = useRouter();
   const handleSignOut = async () => {
     router.push("/sign-in");
   };
-  const user = { name: "Aditya", email: "adi@gmail.com" };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -69,7 +68,7 @@ const UserDropDown = () => {
         </DropdownMenuItem>
         <DropdownMenuSeparator className="hidden sm:block bg-gray-600" />
         <nav className="sm:hidden">
-        <NavItems />
+          <NavItems />
         </nav>
       </DropdownMenuContent>
     </DropdownMenu>
