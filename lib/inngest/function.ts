@@ -1,6 +1,7 @@
 import { success } from "better-auth";
 import { inngest } from "./client";
 import { PERSONALIZED_WELCOME_EMAIL_PROMPT } from "./prompts";
+import { sendWelcomeEmail } from "../nodemailer";
 
 export const sendSignupEmail = inngest.createFunction(
   { id: "sign-up-email" },
@@ -30,15 +31,24 @@ export const sendSignupEmail = inngest.createFunction(
       },
     });
 
-   
-    await step.run("send email",async()=>{
-        const part = response.candidates?.[0]?.content?.parts?.[0];
-        const infoText = (part && 'text' in part ? part.text: null) || "Thanks for joining altrion. You now have the best tools to start your investment journey."; 
-        // email sending logic ->
-    })
-     return {
-        success : true,
-        message: "Signup email sent successfully"
-     }
+    await step.run("send email", async () => {
+      const part = response.candidates?.[0]?.content?.parts?.[0];
+      const infoText =
+        (part && "text" in part ? part.text : null) ||
+        "Thanks for joining altrion. You now have the best tools to start your investment journey.";
+      // email sending logic ->
+      const {
+        data: { email, name },
+      } = event;
+      return await sendWelcomeEmail({
+        email,
+        name,
+        intro: infoText,
+      });
+    });
+    return {
+      success: true,
+      message: "Signup email sent successfully",
+    };
   }
 );

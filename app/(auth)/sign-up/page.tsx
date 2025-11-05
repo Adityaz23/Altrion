@@ -4,10 +4,14 @@ import FooterLink from "@/components/Forms/FooterLink";
 import InputField from "@/components/Forms/InputField";
 import Selective from "@/components/Forms/Selective";
 import { Button } from "@/components/ui/button";
+import { signUpEmail } from "@/lib/action/auth.actions";
 import { INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS } from "@/lib/constant";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const SignUpPage = () => {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -26,10 +30,16 @@ const SignUpPage = () => {
     mode: "onBlur",
   });
   const onSubmit = async (data: SignUpFormData) => {
+    // Here we are rendering the template to the new user which will be send to the email of the user.
     try {
-      console.log(data);
+      //Here we will call the signUpWithEmail server action.
+      const result = signUpEmail(data);
+      if((await result).success) router.push('/')
     } catch (error) {
       console.log(error);
+      toast.error("Error creating account",{
+        description:error instanceof Error ? error.message : "Failed to create account"
+      })
     }
   };
 
