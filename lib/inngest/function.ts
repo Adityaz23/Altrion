@@ -33,7 +33,7 @@ export const sendSignupEmail = inngest.createFunction(
 
     await step.run("send email", async () => {
       const part = response.candidates?.[0]?.content?.parts?.[0];
-      const infoText =
+      const introText =
         (part && "text" in part ? part.text : null) ||
         "Thanks for joining altrion. You now have the best tools to start your investment journey.";
       // email sending logic ->
@@ -43,7 +43,7 @@ export const sendSignupEmail = inngest.createFunction(
       return await sendWelcomeEmail({
         email,
         name,
-        intro: infoText,
+        intro: introText,
       });
     });
     return {
